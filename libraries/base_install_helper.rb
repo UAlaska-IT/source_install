@@ -28,7 +28,7 @@ module BaseInstall
       raise NotImplementedError('Client must indicate a relative path to a file that is created by extraction, e.g. "README.md"')
     end
 
-    def configuration_command(install_directory, _new_resource)
+    def configuration_command(_new_resource)
       raise NotImplementedError('Client must define the configuration command to be run before build, e.g. "./config shared --prefix..."')
     end
 
@@ -40,7 +40,7 @@ module BaseInstall
       raise NotImplementedError('Client must define the command for installation, e.g. "make install"')
     end
 
-    def post_install_logic(install_directory, _new_resource)
+    def post_install_logic(_new_resource)
       raise NotImplementedError('Client must define logic to run after installation, for example to creating symlinks')
     end
 
@@ -167,11 +167,11 @@ module BaseInstall
       end
     end
 
-    def path_to_install_directory(new_resource)
-      return new_resource.install_directory if new_resource.install_directory
+    def ensure_install_directory(new_resource)
+      return if new_resource.install_directory
 
       create_opt_directories(new_resource)
-      return default_install_directory(new_resource)
+      new_resource.install_directory = default_install_directory(new_resource)
     end
 
     def save_config(code, new_resource)
@@ -194,8 +194,8 @@ module BaseInstall
       return makefile
     end
 
-    def configure_build(build_directory, install_directory, new_resource)
-      code = configuration_command(install_directory, new_resource)
+    def configure_build(build_directory, new_resource)
+      code = configuration_command(new_resource)
       makefile = manage_make_file(build_directory, code, new_resource)
       bash 'Configure Build' do
         code code
@@ -246,26 +246,26 @@ module BaseInstall
       return ''
     end
 
-    def command_for_file(install_directory, filename, new_resource)
-      path = File.join(install_directory, filename)
+    def command_for_file(filename, new_resource)
+      path = File.join(new_resource.install_directory, filename)
       recurse = recurse_command(path)
       return "\nchown#{recurse} #{new_resource.owner}:#{new_resource.group} #{path}"
     end
 
-    def iterate_install_directory(install_directory, new_resource)
+    def iterate_install_directory(new_resource)
       command = ''
-      Dir.foreach(install_directory) do |filename|
+      Dir.foreach(new_resource.install_directory) do |filename|
         next if ['.', '..'].include?(filename)
 
-        command += command_for_file(install_directory, filename, new_resource)
+        command += command_for_file(filename, new_resource)
       end
       return command
     end
 
-    def build_permission_command(install_directory, new_resource)
+    def build_permission_command(new_resource)
       ruby_block 'Build Children' do
         block do
-          files = iterate_install_directory(install_directory, new_resource)
+          files = iterate_install_directory(new_resource)
           node.run_state['build_permission_command'] = files
         end
         action :nothing
@@ -282,35 +282,35 @@ module BaseInstall
       end
     end
 
-    def set_install_permissions(build_directory, install_directory, new_resource)
-      build_permission_command(install_directory, new_resource)
+    def set_install_permissions(build_directory, new_resource)
+      build_permission_command(new_resource)
       bash 'Change Install Permissions' do
         code(lazy { node.run_state['build_permission_command'] })
-        cwd install_directory
+        cwd new_resource.install_directory
         action :nothing
         subscribes :run, 'bash[Install]', :immediate
       end
       set_src_permissions(build_directory, new_resource)
     end
 
-    def make_build(build_directory, install_directory, bin_file, new_resource)
+    def make_build(build_directory, bin_file, new_resource)
       execute_build(build_directory, bin_file, new_resource)
       execute_install(build_directory, bin_file, new_resource)
-      set_install_permissions(build_directory, install_directory, new_resource)
+      set_install_permissions(build_directory, new_resource)
     end
 
-    def compile_and_install(build_directory, install_directory, new_resource)
+    def compile_and_install(build_directory, new_resource)
       check_build_directory(build_directory, new_resource)
-      bin_file = File.join(install_directory, install_creates_file(new_resource))
+      bin_file = File.join(new_resource.install_directory, install_creates_file(new_resource))
       manage_bin_file(bin_file)
-      make_build(build_directory, install_directory, bin_file, new_resource)
+      make_build(build_directory, bin_file, new_resource)
     end
 
     def build_binary(build_directory, new_resource)
-      install_directory = path_to_install_directory(new_resource)
-      configure_build(build_directory, install_directory, new_resource)
-      compile_and_install(build_directory, install_directory, new_resource)
-      post_install_logic(install_directory, new_resource)
+      ensure_install_directory(new_resource)
+      configure_build(build_directory, new_resource)
+      compile_and_install(build_directory, new_resource)
+      post_install_logic(new_resource)
     end
 
     def create_install(new_resource)
