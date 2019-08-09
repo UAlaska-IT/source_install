@@ -148,7 +148,7 @@ module BaseInstall
     end
 
     def configure_build(build_directory, install_directory, new_resource)
-      code = create_config_code(install_directory, new_resource)
+      code = configuration_command(install_directory, new_resource)
       makefile = manage_make_file(build_directory, code, new_resource)
       bash 'Configure Build' do
         code code
@@ -254,7 +254,7 @@ module BaseInstall
 
     def compile_and_install(build_directory, install_directory, new_resource)
       check_build_directory(build_directory, new_resource)
-      bin_file = File.join(install_directory, bin_creates_file(new_resource))
+      bin_file = File.join(install_directory, install_creates_file(new_resource))
       manage_bin_file(bin_file)
       make_build(build_directory, install_directory, bin_file, new_resource)
     end
