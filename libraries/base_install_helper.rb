@@ -4,7 +4,54 @@
 module BaseInstall
   # This module implements helpers that are used for resources
   module Install
+    # Hooks for install
+
+    def base_name(_new_resource)
+      raise NotImplementedError('Client must define base application name e.g. "Python". This is frequently used to build e.g. archive file name and will be used to define default directories.')
+    end
+
+    def archive_file_name(_new_resource)
+      # noinspection RubyExpressionInStringInspection
+      raise NotImplementedError('Client must indicate the filename of the what the archive file that will be downloaded, e.g. "#{base_name(new_resource)}-#{new_resource.version}.tar.gz"')
+    end
+
+    def download_base_url(_new_resource)
+      raise NotImplementedError('Client must indicate the URL at which the archive file is located, e.g. "https://www.oss-project.org/source"')
+    end
+
+    def archive_root_directory(_new_resource)
+      # noinspection RubyExpressionInStringInspection
+      raise NotImplementedError('Client must indicate the directory created by extraction, e.g. "#{base_name(new_resource)}-#{new_resource.version}". This will be used as the build directory.')
+    end
+
+    def extract_creates_file(_new_resource)
+      raise NotImplementedError('Client must indicate a relative path to a file that is created by extraction, e.g. "README.md"')
+    end
+
+    def configuration_command(install_directory, _new_resource)
+      raise NotImplementedError('Client must define the configuration command to be run before build, e.g. "./config shared --prefix..."')
+    end
+
+    def install_creates_file(_new_resource)
+      raise NotImplementedError('Client must indicate a relative path to a file that is created by installation, e.g. "bin/my_app"')
+    end
+
+    def install_command(_new_resource)
+      raise NotImplementedError('Client must define the command for installation, e.g. "make install"')
+    end
+
+    def post_install_logic(install_directory, _new_resource)
+      raise NotImplementedError('Client must define logic to run after installation, for example to creating symlinks')
+    end
+
     # Common install code
+
+    def download_url(new_resource)
+      url = download_base_url(new_resource)
+      url += '/' unless url.match?(%r{/$})
+      url += archive_file_name(new_resource)
+      return url
+    end
 
     def create_default_directories
       directory '/var/chef' do
@@ -263,7 +310,7 @@ module BaseInstall
       install_directory = path_to_install_directory(new_resource)
       configure_build(build_directory, install_directory, new_resource)
       compile_and_install(build_directory, install_directory, new_resource)
-      post_build_logic(install_directory, new_resource)
+      post_install_logic(install_directory, new_resource)
     end
 
     def create_install(new_resource)
