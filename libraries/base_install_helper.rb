@@ -50,6 +50,12 @@ module BaseInstall
 
     # Common install code
 
+    def ensure_version(new_resource)
+      return if new_resource.version
+
+      new_resource.version = default_version(new_resource)
+    end
+
     def download_url(new_resource)
       url = download_base_url(new_resource)
       url += '/' unless url.match?(%r{/$})
@@ -318,6 +324,7 @@ module BaseInstall
     end
 
     def create_install(new_resource)
+      ensure_version(new_resource)
       build_directory = path_to_build_directory(new_resource)
       extract_archive(build_directory, new_resource)
       build_binary(build_directory, new_resource)
