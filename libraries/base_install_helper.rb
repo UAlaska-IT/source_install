@@ -7,7 +7,8 @@ module BaseInstall
     # Hooks for install
 
     def base_name(_new_resource)
-      raise NotImplementedError('Client must define base application name e.g. "Python". This is frequently used to build e.g. archive file name and will be used to define default directories.')
+      raise NotImplementedError('Client must define base application name e.g. "Python". \
+This is frequently used to build e.g. archive file name and will be used to define default directories.')
     end
 
     def default_version(_new_resource)
@@ -16,28 +17,34 @@ module BaseInstall
 
     def archive_file_name(_new_resource)
       # noinspection RubyExpressionInStringInspection
-      raise NotImplementedError('Client must indicate the filename of the what the archive file that will be downloaded, e.g. "#{base_name(new_resource)}-#{new_resource.version}.tar.gz"')
+      raise NotImplementedError('Client must indicate the filename of the what the archive file \
+that will be downloaded, e.g. "#{base_name(new_resource)}-#{new_resource.version}.tar.gz"')
     end
 
     def download_base_url(_new_resource)
-      raise NotImplementedError('Client must indicate the URL at which the archive file is located, e.g. "https://www.oss-project.org/source"')
+      raise NotImplementedError('Client must indicate the URL at which the archive file is located, \
+e.g. "https://www.oss-project.org/source"')
     end
 
     def archive_root_directory(_new_resource)
       # noinspection RubyExpressionInStringInspection
-      raise NotImplementedError('Client must indicate the directory created by extraction, e.g. "#{base_name(new_resource)}-#{new_resource.version}". This will be used as the build directory.')
+      raise NotImplementedError('Client must indicate the directory created by extraction, \
+e.g. "#{base_name(new_resource)}-#{new_resource.version}". This will be used as the build directory.')
     end
 
     def extract_creates_file(_new_resource)
-      raise NotImplementedError('Client must indicate a relative path to a file that is created by extraction, e.g. "README.md"')
+      raise NotImplementedError('Client must indicate a relative path to a file that is created by extraction, \
+e.g. "README.md"')
     end
 
     def configuration_command(_new_resource)
-      raise NotImplementedError('Client must define the configuration command to be run before build, e.g. "./config shared --prefix..."')
+      raise NotImplementedError('Client must define the configuration command to be run before build, \
+e.g. "./config shared --prefix..."')
     end
 
     def install_creates_file(_new_resource)
-      raise NotImplementedError('Client must indicate a relative path to a file that is created by installation, e.g. "bin/my_app"')
+      raise NotImplementedError('Client must indicate a relative path to a file that is created by installation, \
+e.g. "bin/my_app"')
     end
 
     def install_command(_new_resource)
