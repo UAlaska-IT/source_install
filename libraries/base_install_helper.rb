@@ -10,6 +10,10 @@ module BaseInstall
       raise NotImplementedError('Client must define base application name e.g. "Python". This is frequently used to build e.g. archive file name and will be used to define default directories.')
     end
 
+    def default_version(_new_resource)
+      raise NotImplementedError('Client must provide a default version string e.g. "1.1.4".')
+    end
+
     def archive_file_name(_new_resource)
       # noinspection RubyExpressionInStringInspection
       raise NotImplementedError('Client must indicate the filename of the what the archive file that will be downloaded, e.g. "#{base_name(new_resource)}-#{new_resource.version}.tar.gz"')
