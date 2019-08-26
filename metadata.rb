@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require File.expand_path('lib/source_install/version', __dir__)
+
 name 'source_install'
 maintainer 'OIT Systems Engineering'
 maintainer_email 'ua-oit-se@alaska.edu'
@@ -11,7 +13,7 @@ git_url = 'https://github.com/ualaska-it/source_install'
 source_url git_url if respond_to?(:source_url)
 issues_url "#{git_url}/issues" if respond_to?(:issues_url)
 
-version '1.0.0'
+version Source::Install::VERSION
 
 supports 'ubuntu', '>= 14.0'
 supports 'debian', '>= 8.0'
@@ -26,3 +28,5 @@ supports 'suse'
 chef_version '>= 14.0' if respond_to?(:chef_version)
 
 depends 'checksum_file'
+
+gem 'source_install'
