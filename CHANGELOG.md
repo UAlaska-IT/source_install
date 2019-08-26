@@ -1,4 +1,4 @@
-# Changelog for Base Install Cookbook
+# Changelog for Source Install Cookbook
 
 ## 1.0.0
 
