@@ -18,8 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.files = [
     'LICENSE',
-    'lib/source_install.rb',
-    'lib/source_install/version.rb'
+    'lib/source_install.rb'
   ]
   spec.require_paths = ['lib']
 

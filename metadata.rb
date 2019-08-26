@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path('lib/source_install/version', __dir__)
+require File.expand_path('lib/source_install', __dir__)
 
 name 'source_install'
 maintainer 'OIT Systems Engineering'
