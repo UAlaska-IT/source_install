@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-lib = expand_path('lib', __dir__)
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'source_install/version'
 
@@ -16,7 +16,11 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.4.0' # rubocop:disable Gemspec/RequiredRubyVersion
 
-  spec.files = ['LICENSE'] + Dir.glob('lib/*', File::FNM_DOTMATCH).reject { |f| File.directory?(f) }
+  spec.files = [
+    'LICENSE',
+    'lib/source_install.rb',
+    'lib/source_install/version.rb'
+  ]
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler'
