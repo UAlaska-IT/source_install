@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require File.expand_path('lib/source_install', __dir__)
-
 name 'source_install'
 maintainer 'OIT Systems Engineering'
 maintainer_email 'ua-oit-se@alaska.edu'
@@ -13,7 +11,7 @@ git_url = 'https://github.com/ualaska-it/source_install'
 source_url git_url if respond_to?(:source_url)
 issues_url "#{git_url}/issues" if respond_to?(:issues_url)
 
-version Source::Install::VERSION
+version '1.0.0'
 
 supports 'ubuntu', '>= 14.0'
 supports 'debian', '>= 8.0'
