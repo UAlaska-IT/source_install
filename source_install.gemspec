@@ -9,8 +9,12 @@ Gem::Specification.new do |spec|
   spec.version = Source::Install::VERSION
   spec.authors = ['UA OIT Systems Engineering']
   spec.email = ['ua-oit-se@alaska.edu']
-  spec.description = 'Logic for downloading, configuring, compiling, and installing packages from source'
-  spec.summary = 'A gem for common installer logic'
+  spec.description =
+    'Common logic for downloading, configuring, compiling, and installing packages from source. '\
+    'Auto-magically included in Chef by depending on the source_install cookbook. '\
+    'Used/tested in first-party cookbooks openssl_install, sqlite_install, and python_install. '\
+    'This gem uses Chef resources internally, so can be used only within a Chef cookbook.'
+  spec.summary = 'Common logic for installing from source.'
   spec.homepage = 'https://github.com/ualaska-it/source_install'
   spec.license = 'MIT'
 
