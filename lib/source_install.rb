@@ -4,7 +4,7 @@
 module Source
   # This module implements helpers that are used for resources
   module Install
-    VERSION = '1.0.0'
+    VERSION = '0.0.0'
 
     # Hooks for install
 
