@@ -2,12 +2,14 @@
 
 [![License](https://img.shields.io/github/license/ualaska-it/source_install.svg)](https://github.com/ualaska-it/source_install)
 [![GitHub Tag](https://img.shields.io/github/tag/ualaska-it/source_install.svg)](https://github.com/ualaska-it/source_install)
+[![Build status](https://ci.appveyor.com/api/projects/status/u8rh876pwwhwl1je/branch/master?svg=true)](https://ci.appveyor.com/project/UAlaska/source-install/branch/master)
 
 __Maintainer: OIT Systems Engineering__ (<ua-oit-se@alaska.edu>)
 
 ## Purpose
 
-This cookbook provides a gem that provides logic for downloading, configuring, compiling, and installing packages from source.
+This cookbook installs a gem in Chef that provides logic for downloading, configuring, compiling, and installing packages from source.
+Used by first-party cookbooks [openssl_install](https://github.com/UAlaska-IT/openssl_install), [sqlite_install](https://github.com/UAlaska-IT/sqlite_install), and [python_install](https://github.com/UAlaska-IT/python_install).
 
 ## Requirements
 
