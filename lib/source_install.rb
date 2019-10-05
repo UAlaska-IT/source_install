@@ -53,8 +53,10 @@ e.g. "bin/my_app"')
       raise NotImplementedError('Client must define the command for installation, e.g. "make install"')
     end
 
+    # Optional hooks for install
+
     def post_install_logic(_new_resource)
-      raise NotImplementedError('Client must define logic to run after installation, for example to creating symlinks')
+      # Client may define logic to run after installation, for example for creating symlinks
     end
 
     # Common install code
