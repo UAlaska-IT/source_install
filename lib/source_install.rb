@@ -59,6 +59,13 @@ e.g. "bin/my_app"')
       # Client may define logic to run after installation, for example for creating symlinks
     end
 
+    def config_creates_file(_new_resource)
+      # If the client defines a config_creates_file, then the existence of that file will be used to signal the build
+      # Otherwise, a checksum is taken of the build directory
+      # A file is less robust for signaling rebuild when config changes, but cleaner for nasty in-source builds
+      return nil
+    end
+
     # Common install code
 
     def ensure_version(new_resource)
