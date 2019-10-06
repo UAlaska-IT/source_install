@@ -1,5 +1,9 @@
 # Changelog for Source Install Cookbook
 
+## 1.1.1
+
+* Add hook build_command
+
 ## 1.1.0
 
 * Added config creates file
