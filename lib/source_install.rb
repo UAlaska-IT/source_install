@@ -49,11 +49,12 @@ e.g. "./config shared --prefix..."')
 e.g. "bin/my_app"')
     end
 
-    def install_command(_new_resource)
-      raise NotImplementedError('Client must define the command for installation, e.g. "make install"')
-    end
-
     # Optional hooks for install
+
+    def install_command(_new_resource)
+      # This is probably the most common command, another option is 'make altinstall'
+      return 'make install'
+    end
 
     def post_install_logic(_new_resource)
       # Client may define logic to run after installation, for example for creating symlinks
@@ -67,7 +68,7 @@ e.g. "bin/my_app"')
       return nil
     end
 
-    # Common install code
+    # Common install code; the hooks are intended to save clients the effort of implementing anything below
 
     def ensure_version(new_resource)
       return if new_resource.version
