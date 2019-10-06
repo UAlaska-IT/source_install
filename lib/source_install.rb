@@ -4,7 +4,7 @@
 module Source
   # This module implements helpers that are used for resources
   module Install
-    VERSION = '1.0.1'
+    VERSION = '1.1.0'
 
     # Hooks for install
 
@@ -53,8 +53,18 @@ e.g. "bin/my_app"')
       raise NotImplementedError('Client must define the command for installation, e.g. "make install"')
     end
 
+    # Optional hooks for install
+
     def post_install_logic(_new_resource)
-      raise NotImplementedError('Client must define logic to run after installation, for example to creating symlinks')
+      # Client may define logic to run after installation, for example for creating symlinks
+    end
+
+    def config_creates_file(_new_resource)
+      # A relative path to a file created by configuration
+      # If the client defines a config_creates_file, then the content of that file will be used to signal rebuild
+      # Otherwise, a checksum is taken of the entire build directory
+      # A file is less robust for signaling rebuild when config changes, but cleaner for nasty in-source builds
+      return nil
     end
 
     # Common install code
@@ -226,8 +236,10 @@ e.g. "bin/my_app"')
     end
 
     def check_build_directory(build_directory, new_resource)
+      creates_file = config_creates_file(new_resource)
       checksum_file 'Source Checksum' do
-        source_path build_directory
+        source_path File.join(build_directory, creates_file) if creates_file
+        source_path build_directory unless creates_file
         target_path "/var/chef/cache/#{base_name(new_resource).downcase}-#{new_resource.version}-src-checksum"
       end
     end
