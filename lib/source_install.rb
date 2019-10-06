@@ -51,6 +51,10 @@ e.g. "bin/my_app"')
 
     # Optional hooks for install
 
+    def build_command(_new_resource)
+      return 'make'
+    end
+
     def install_command(_new_resource)
       # This is probably the most common command, another option is 'make altinstall'
       return 'make install'
@@ -255,7 +259,7 @@ e.g. "bin/my_app"')
 
     def execute_build(build_directory, bin_file, new_resource)
       bash 'Compile' do
-        code 'make'
+        code build_command(new_resource)
         cwd build_directory
         user new_resource.owner
         group new_resource.group
