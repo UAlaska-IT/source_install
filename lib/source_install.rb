@@ -146,6 +146,7 @@ e.g. "bin/my_app"')
       checksum_file 'Download Checksum' do
         source_path download_file
         target_path "/var/chef/cache/#{base_name(new_resource).downcase}-#{new_resource.version}-dl-checksum"
+        include_metadata false
       end
       clear_source_directory(build_directory, new_resource)
     end
@@ -246,6 +247,7 @@ e.g. "bin/my_app"')
         source_path File.join(build_directory, creates_file) if creates_file
         source_path build_directory unless creates_file
         target_path "/var/chef/cache/#{base_name(new_resource).downcase}-#{new_resource.version}-src-checksum"
+        include_metadata false
       end
     end
 
