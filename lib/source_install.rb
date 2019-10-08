@@ -4,7 +4,7 @@
 module Source
   # This module implements helpers that are used for resources
   module Install
-    VERSION = '1.1.0'
+    VERSION = '1.1.1'
 
     # Hooks for install
 
@@ -49,11 +49,16 @@ e.g. "./config shared --prefix..."')
 e.g. "bin/my_app"')
     end
 
-    def install_command(_new_resource)
-      raise NotImplementedError('Client must define the command for installation, e.g. "make install"')
+    # Optional hooks for install
+
+    def build_command(_new_resource)
+      return 'make'
     end
 
-    # Optional hooks for install
+    def install_command(_new_resource)
+      # This is probably the most common command, another option is 'make altinstall'
+      return 'make install'
+    end
 
     def post_install_logic(_new_resource)
       # Client may define logic to run after installation, for example for creating symlinks
@@ -67,7 +72,7 @@ e.g. "bin/my_app"')
       return nil
     end
 
-    # Common install code
+    # Common install code; the hooks are intended to save clients the effort of implementing anything below
 
     def ensure_version(new_resource)
       return if new_resource.version
@@ -141,6 +146,7 @@ e.g. "bin/my_app"')
       checksum_file 'Download Checksum' do
         source_path download_file
         target_path "/var/chef/cache/#{base_name(new_resource).downcase}-#{new_resource.version}-dl-checksum"
+        include_metadata false
       end
       clear_source_directory(build_directory, new_resource)
     end
@@ -241,6 +247,7 @@ e.g. "bin/my_app"')
         source_path File.join(build_directory, creates_file) if creates_file
         source_path build_directory unless creates_file
         target_path "/var/chef/cache/#{base_name(new_resource).downcase}-#{new_resource.version}-src-checksum"
+        include_metadata false
       end
     end
 
@@ -254,7 +261,7 @@ e.g. "bin/my_app"')
 
     def execute_build(build_directory, bin_file, new_resource)
       bash 'Compile' do
-        code 'make'
+        code build_command(new_resource)
         cwd build_directory
         user new_resource.owner
         group new_resource.group
