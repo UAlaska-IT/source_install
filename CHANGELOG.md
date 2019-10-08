@@ -3,6 +3,7 @@
 ## 1.1.1
 
 * Add hook build_command
+* Eliminate metadata from config checksum
 
 ## 1.1.0
 
